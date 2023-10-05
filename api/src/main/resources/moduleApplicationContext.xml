@@ -34,6 +34,12 @@
 
 <!--    <ref bean="defaultAppointmentMailSender"/>-->
 
+    <bean id="openmrsProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:appointment.properties" />
+    </bean>
+
+
+
     <bean id="patientAppointmentNotifierService" class="org.openmrs.module.appointments.service.impl.PatientAppointmentNotifierService">
         <property name="eventNotifiers">
             <list value-type="org.openmrs.module.appointments.notification.AppointmentEventNotifier">
@@ -84,6 +90,31 @@
         </property>
     </bean>
 
+
+
+    <bean id="appointmentArgumentsMapper" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors"/>
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource"/>
+        </property>
+        <property name="target">
+            <bean class="org.openmrs.module.appointments.service.impl.AppointmentArgumentsMapperImpl">
+            </bean>
+        </property>
+    </bean>
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.appointments.service.AppointmentArgumentsMapper</value>
+                <ref bean="appointmentArgumentsMapper" />
+            </list>
+        </property>
+    </bean>
     <bean id="appointmentsService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager"/>
@@ -135,7 +166,9 @@
             <ref bean="transactionAttributeSource"/>
         </property>
     </bean>
-
+    <bean id="appointmentVisitLocation" class="org.openmrs.module.appointments.service.impl.AppointmentVisitLocation" depends-on="openmrsProperties">
+        <property name="baseURL" value="${openmrs.root.uri}"/>
+    </bean>
 
     <bean id="recurringAppointmentService"
           class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
@@ -265,5 +298,4 @@
             <ref bean="sessionFactory"/>
         </property>
     </bean>
-
 </beans>

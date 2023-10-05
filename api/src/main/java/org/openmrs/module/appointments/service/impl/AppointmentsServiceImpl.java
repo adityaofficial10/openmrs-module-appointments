@@ -4,6 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Person;
+import org.openmrs.PersonAttribute;
 import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -28,14 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -67,6 +61,8 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     private TeleconsultationAppointmentService teleconsultationAppointmentService;
 
     private PatientAppointmentNotifierService appointmentNotifierService;
+
+
 
     public void setAppointmentDao(AppointmentDao appointmentDao) {
         this.appointmentDao = appointmentDao;
@@ -103,6 +99,7 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     public void setAppointmentNotifierService(PatientAppointmentNotifierService appointmentNotifierService) {
         this.appointmentNotifierService = appointmentNotifierService;
     }
+
 
     private boolean validateIfUserHasSelfOrAllAppointmentsAccess(Appointment appointment) {
         return Context.hasPrivilege(MANAGE_APPOINTMENTS) ||
@@ -192,6 +189,14 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     public List<Appointment> getAllAppointments(Date forDate) {
         List<Appointment> appointments = appointmentDao.getAllAppointments(forDate);
         return appointments.stream().filter(appointment -> !isServiceOrServiceTypeVoided(appointment)).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public List<Appointment> getAllAppointmentsReminder(String hours) {
+        List<Appointment> appointments = appointmentDao.getAllAppointmentsReminder(hours);
+        return appointments.stream().filter(appointment -> !isServiceOrServiceTypeVoided(appointment)).collect(Collectors.toList());
+
     }
 
     private boolean isServiceOrServiceTypeVoided(Appointment appointment) {

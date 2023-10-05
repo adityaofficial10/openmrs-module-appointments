@@ -19,6 +19,7 @@
 
 	<aware_of_modules>
 		<aware_of_module version="${openmrsAtomfeedVersion}">org.ict4h.openmrs.openmrs-atomfeed</aware_of_module>
+		<aware_of_module version="${communications.version}">org.bahmni.module.communication</aware_of_module>
 	</aware_of_modules>
 
 	<conditional_resources>
@@ -75,6 +76,16 @@
 		<class>org.openmrs.module.appointments.advice.RecurringAppointmentsAdvice</class>
 	</advice>
 
+	<advice>
+		<point>org.openmrs.module.appointments.service.AppointmentsService</point>
+		<class>org.openmrs.module.appointments.events.advice.AppointmentEventsAdvice</class>
+	</advice>
+
+	<advice>
+		<point>org.openmrs.module.appointments.service.AppointmentRecurringPatternService</point>
+		<class>org.openmrs.module.appointments.events.advice.RecurringAppointmentEventsAdvice</class>
+	</advice>
+
 	<globalProperty>
 		<property>disableDefaultAppointmentValidations</property>
 		<defaultValue>false</defaultValue>
@@ -89,6 +100,11 @@
 		<property>SchedulerMarksMissed</property>
 		<defaultValue>false</defaultValue>
 		<description>Scheduler marks scheduled appointments as missed when it is turned on</description>
+	</globalProperty>
+	<globalProperty>
+	<property>SchedulerReminderBeforeHours</property>
+	<defaultValue>24</defaultValue>
+	<description>How many hours before the appointment should the reminder SMS be sent</description>
 	</globalProperty>
 
 	<globalProperty>
@@ -137,5 +153,31 @@
 		<description>Identifier type of patient to generate AdhocTeleconsultation link eg: 'Patient Identifier' or 'National ID' etc</description>
 	</globalProperty>
 
-</module>
+	<globalProperty>
+		<property>sms.enableAppointmentBookingSMSAlert</property>
+		<defaultValue>false</defaultValue>
+	</globalProperty>
 
+	<globalProperty>
+		<property>sms.enableAppointmentReminderSMSAlert</property>
+		<defaultValue>false</defaultValue>
+	</globalProperty>
+
+	<globalProperty>
+		<property>clinic.clinicTimings</property>
+		<defaultValue>Mon-Fri (09:00-22:00), Sat-Sun CLOSED</defaultValue>
+		<description>Global property having timings of particular clinic</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>bahmni.sms.timezone</property>
+		<defaultValue>IST</defaultValue>
+	</globalProperty>
+
+	<globalProperty>
+		<property>bahmni.sms.dateformat</property>
+		<defaultValue>dd-MM-yyyy' Time 'HH:mm</defaultValue>
+	</globalProperty>
+
+
+</module>
