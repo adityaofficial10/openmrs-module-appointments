@@ -37,6 +37,7 @@ public class Appointment extends BaseOpenmrsData implements Serializable {
     private Set<AppointmentAudit> appointmentAudits = new HashSet<>();
     private Appointment relatedAppointment;
     private String teleHealthVideoLink;
+    private String telephoneNumber;
 
     /**
      * This attribute is not a entity property. Just a placeholder for the clients to prepare response relevant  to notification
@@ -231,6 +232,14 @@ public class Appointment extends BaseOpenmrsData implements Serializable {
 
     public void setTeleHealthVideoLink(String teleHealthVideoLink) {
         this.teleHealthVideoLink = teleHealthVideoLink;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     public void setNotificationResults(List<NotificationResult> notificationResults) {

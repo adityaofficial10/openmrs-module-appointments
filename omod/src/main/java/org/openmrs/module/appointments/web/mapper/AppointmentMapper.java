@@ -199,7 +199,9 @@ public class AppointmentMapper {
         response.setUuid(a.getUuid());
         response.setAppointmentNumber(a.getAppointmentNumber());
         response.setDateCreated(a.getDateCreated());
-        response.setPatient(createPatientMap(a.getPatient()));
+        Map patient = createPatientMap(a.getPatient());
+        patient.put("telephoneNumber", a.getTelephoneNumber());
+        response.setPatient(patient);
         response.setService(appointmentServiceMapper.constructDefaultResponse(a.getService()));
         response.setServiceType(createServiceTypeMap(a.getServiceType()));
         //response.setProvider(createProviderMap(a.getProvider()));
@@ -280,6 +282,7 @@ public class AppointmentMapper {
         map.put("identifier", p.getPatientIdentifier().getIdentifier());
         map.put("age", p.getAge());
         map.put("gender", p.getGender());
+        map.put("dob", p.getBirthdate().toString());
         map.putAll(p.getActiveIdentifiers().stream().filter(e -> e.getIdentifierType() != null).collect(Collectors.toMap(e -> e.getIdentifierType().toString().replaceAll("[- ]", ""), e -> e.getIdentifier(), (e1, e2) -> e1 + "," + e2)));
         return map;
     }
